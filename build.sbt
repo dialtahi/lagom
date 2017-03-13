@@ -274,7 +274,8 @@ val scaladslProjects = Seq[Project](
   `pubsub-scaladsl`,
   `testkit-scaladsl`,
   `devmode-scaladsl`,
-  `play-json`
+  `play-json`,
+  `process-manager`
 )
 
 val coreProjects = Seq[Project](
@@ -1200,6 +1201,31 @@ lazy val `kafka-server` = (project in file("dev") / "kafka-server")
       // for more context. 
       log4J,
       // Note that curator 3.x is only compatible with zookeper 3.5.x. Kafka currently uses zookeeper 3.4, hence we have 
+      // to use curator 2.x, which is compatible with zookeeper 3.4 (see the notice in
+      // http://curator.apache.org/index.html - make sure to scroll to the bottom)
+      "org.apache.curator" % "curator-framework" % "2.10.0",
+      "org.apache.curator" % "curator-test" % "2.10.0",
+      scalaJava8Compat,
+      scalaTest % Test
+    )
+  )
+
+lazy val `process-manager` = (project in file("process-manager/scaladsl"))
+  .settings(name := "process-manager-scaladsl")
+  .settings(runtimeLibCommon: _*)
+  .enablePlugins(RuntimeLibPlugins)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.apache.kafka" %% "kafka" % KafkaVersion,
+      // log4j version prior to 1.2.17 required javax.jms, and that artifact could not properly resolved when using maven
+      // without adding a resolver. The problem doesn't appear with sbt because the log4j version brought by both zookeeper
+      // and curator dependencies are evicted to version 1.2.17. Unfortunately, because of how maven resolution works, we
+      // have to explicitly add the desired log4j version we want to use here.
+      // By the way, log4j 1.2.17 and later resolve the javax.jms dependency issue by using geronimo-jms. See
+      // http://stackoverflow.com/questions/4908651/the-following-artifacts-could-not-be-resolved-javax-jmsjmsjar1-1
+      // for more context.
+      log4J,
+      // Note that curator 3.x is only compatible with zookeper 3.5.x. Kafka currently uses zookeeper 3.4, hence we have
       // to use curator 2.x, which is compatible with zookeeper 3.4 (see the notice in
       // http://curator.apache.org/index.html - make sure to scroll to the bottom)
       "org.apache.curator" % "curator-framework" % "2.10.0",
