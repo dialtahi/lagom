@@ -275,7 +275,7 @@ val scaladslProjects = Seq[Project](
   `testkit-scaladsl`,
   `devmode-scaladsl`,
   `play-json`,
-  `process-manager`
+  `process-manager-scaladsl`
 )
 
 val coreProjects = Seq[Project](
@@ -1210,10 +1210,11 @@ lazy val `kafka-server` = (project in file("dev") / "kafka-server")
     )
   )
 
-lazy val `process-manager` = (project in file("process-manager/scaladsl"))
+lazy val `process-manager-scaladsl` = (project in file("process-manager/scaladsl"))
   .settings(name := "process-manager-scaladsl")
   .settings(runtimeLibCommon: _*)
   .enablePlugins(RuntimeLibPlugins)
+  .dependsOn(`persistence-scaladsl` % Test)
   .settings(
     libraryDependencies ++= Seq(
       "org.apache.kafka" %% "kafka" % KafkaVersion,
