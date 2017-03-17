@@ -1214,7 +1214,7 @@ lazy val `process-manager-scaladsl` = (project in file("process-manager/scaladsl
   .settings(name := "process-manager-scaladsl")
   .settings(runtimeLibCommon: _*)
   .enablePlugins(RuntimeLibPlugins)
-  .dependsOn(`persistence-scaladsl` % Test)
+  .dependsOn(`cluster-scaladsl`, `persistence-scaladsl` % Test, `testkit-scaladsl` % Test)
   .settings(
     libraryDependencies ++= Seq(
       "org.apache.kafka" %% "kafka" % KafkaVersion,
@@ -1232,7 +1232,8 @@ lazy val `process-manager-scaladsl` = (project in file("process-manager/scaladsl
       "org.apache.curator" % "curator-framework" % "2.10.0",
       "org.apache.curator" % "curator-test" % "2.10.0",
       scalaJava8Compat,
-      scalaTest % Test
+      scalaTest % Test,
+      "com.softwaremill.macwire" %% "macros" % "2.2.5" % Test
     )
   )
 
