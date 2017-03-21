@@ -14,15 +14,20 @@ object Initialized extends ProcessManagerState
 case class ProcessingSecondEvent() extends ProcessManagerState
 case class ProcessingThirdEvent() extends ProcessManagerState
 
-sealed trait Command
-case class FirstCommand() extends Command
+sealed trait EntityCommand
+case class FirstCommand() extends EntityCommand
+case class SecondCommand() extends EntityCommand
 
 class MyEntity extends PersistentEntity {
-  override type Command = this.type
-  override type Event = this.type
-  override type State = this.type
 
-  override def initialState: MyEntity.this.type = ???
+  trait EntityState
+  case class Initialized() extends EntityState
+
+  override type Command = EntityCommand
+  override type Event = ProcessManagerEvent
+  override type State = EntityState
+
+  override def initialState: EntityState = Initialized()
 
   /**
     * Abstract method that must be implemented by concrete subclass to define
@@ -44,15 +49,18 @@ class TestProcessManager(persistentEntityRegistry: PersistentEntityRegistry)(imp
   }
 
   startWhen {
-    case InitializationEvent(_) => Initialized
+    case InitializationEvent(_) =>
+      persistentEntityRegistry.refFor[MyEntity](correlationIdResolver).ask(FirstCommand)
+      Initialized
   } andThen {
       case Initialized => {
         case SecondEvent(_) =>
-          persistentEntityRegistry.refFor[MyEntity](correlationIdResolver).ask(FirstCommand)
+          persistentEntityRegistry.refFor[MyEntity](correlationIdResolver).ask(SecondCommand)
           ProcessingSecondEvent()
       }
       case ProcessingSecondEvent() => {
-        case ThirdEvent(_) => ProcessingThirdEvent()
+        case ThirdEvent(_) =>
+          ProcessingThirdEvent()
       }
   }
 
