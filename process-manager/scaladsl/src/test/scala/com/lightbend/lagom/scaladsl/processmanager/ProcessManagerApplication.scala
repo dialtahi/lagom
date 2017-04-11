@@ -1,5 +1,6 @@
 package com.lightbend.lagom.scaladsl.processmanager
 
+import com.lightbend.lagom.scaladsl.broker.kafka.LagomKafkaClientComponents
 import com.lightbend.lagom.scaladsl.persistence.cassandra.CassandraPersistenceComponents
 import com.lightbend.lagom.scaladsl.playjson.{JsonSerializer, JsonSerializerRegistry}
 import com.lightbend.lagom.scaladsl.server.{LagomApplication, LagomApplicationContext, LagomServer}
@@ -8,7 +9,7 @@ import play.api.libs.ws.ahc.AhcWSComponents
 
 abstract class ProcessManagerApplication(context: LagomApplicationContext) extends LagomApplication(context)
   with CassandraPersistenceComponents
-  with MessageBrokerProcessManagerComponents
+  with KafkaProcessManagerComponents
   with AhcWSComponents {
 
   override lazy val lagomServer: LagomServer = LagomServer.forServices(

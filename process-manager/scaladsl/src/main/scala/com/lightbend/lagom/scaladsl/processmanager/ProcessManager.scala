@@ -1,6 +1,8 @@
 package com.lightbend.lagom.scaladsl.processmanager
 
 import akka.event.Logging
+import com.lightbend.lagom.internal.scaladsl.broker.kafka.ScaladslKafkaSubscriber
+import com.lightbend.lagom.scaladsl.api.broker.Subscriber
 
 /**
   * A `ProcessManager` is responsible of coordinate a business process
@@ -27,6 +29,10 @@ abstract class ProcessManager {
   class Actions extends (DomainEvent => Actions) {
     override def apply(event: DomainEvent): Actions = this
 
+
+  }
+
+  def a() = {
 
   }
 

@@ -1,7 +1,6 @@
 package com.lightbend.lagom.scaladsl.processmanager
 
 import java.net.URLDecoder
-import java.util.Optional
 
 import akka.actor.Props
 import akka.persistence.fsm.PersistentFSM

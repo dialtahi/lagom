@@ -1214,7 +1214,7 @@ lazy val `process-manager-scaladsl` = (project in file("process-manager/scaladsl
   .settings(name := "process-manager-scaladsl")
   .settings(runtimeLibCommon: _*)
   .enablePlugins(RuntimeLibPlugins)
-  .dependsOn(`persistence-core`, `cluster-scaladsl`, `persistence-scaladsl` % Test, `testkit-scaladsl` % Test)
+  .dependsOn(`kafka-client-scaladsl`, `persistence-core`, `cluster-scaladsl`, `persistence-scaladsl` % Test, `testkit-scaladsl` % Test)
   .settings(
     libraryDependencies ++= Seq(
       "org.apache.kafka" %% "kafka" % KafkaVersion,
